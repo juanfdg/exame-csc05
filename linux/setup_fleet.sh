@@ -14,6 +14,10 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo apt -y install ansible
 ansible-galaxy install apolloclark.osquery
 
+# Install winrm
+sudo apt -y install python-pip
+pip install pywinrm
+
 # Configure fleet service
 pushd fleet-osquery
 mv * ../
