@@ -1,6 +1,6 @@
 --tls_server_certs=C:\Program Files\osquery\certs\certificate.crt
 --enroll_secret_path=C:\Program Files\osquery\osquery.key
---tls_hostname=fleet.local:8412
+--tls_hostname=fleet.local:17010
 --host_identifier=uuid
 --enroll_tls_endpoint=/api/v1/osquery/enroll
 --config_plugin=tls

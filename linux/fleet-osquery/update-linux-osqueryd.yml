@@ -1,7 +1,7 @@
 - hosts: linuxapps
   tasks:
   - name: Get cert for Kolide
-    shell: python3 -c "import ssl; print (ssl.get_server_certificate(('fleet.local', 8412)))" | sudo tee /etc/osquery/certificate.crt
+    shell: python3 -c "import ssl; print (ssl.get_server_certificate(('fleet.local', 17010)))" | sudo tee /etc/osquery/certificate.crt
 
   - name: Copy OSQuery flags file
     template:
