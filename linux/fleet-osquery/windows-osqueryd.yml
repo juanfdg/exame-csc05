@@ -1,0 +1,29 @@
+- hosts: winapps
+  tasks:
+
+  - name: Install OSQuery with chocolatey
+    win_chocolatey:
+      name: osquery
+      params: "/InstallService"
+      state: latest
+
+  - name: Get certificate
+    win_template:
+      src: osquery/fleet.crt
+      dest: C:\Program Files\osquery\certs\certificate.crt
+
+  - name: Copy OSQuery.flags
+    win_template:
+      src: osquery-windows.flags
+      dest: C:\Program Files\osquery\osquery.flags
+
+  - name: Copy OSQuery.key
+    win_template:
+      src: osquery/enroll.key
+      dest: C:\Program Files\osquery\osquery.key
+
+  - name: Start OSQuery service
+    win_service:
+      name: osqueryd
+      start_mode: auto
+      state: restarted

@@ -1,0 +1,25 @@
+- hosts: linuxapps
+  tasks:
+  - name: Get cert for Kolide
+    shell: python3 -c "import ssl; print (ssl.get_server_certificate(('fleet.local', 8412)))" | sudo tee /etc/osquery/certificate.crt
+
+  - name: Copy OSQuery flags file
+    template:
+      src: osquery.flags
+      dest: /etc/osquery/osquery.flags
+      owner: root
+      group: root
+      mode: '0600'
+
+  - name: Copy OSQuery secret
+    template:
+      src: osquery/enroll.key
+      dest: /etc/osquery/osquery.key
+      owner: root
+      group: root
+      mode: '0600'
+
+  - name: Restart osquery
+    service:
+      name: "osqueryd"
+      state: restarted

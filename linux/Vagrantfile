@@ -1,0 +1,48 @@
+Vagrant.configure("2") do |config|
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+  config.vm.define "fleet" do |fleet|
+    fleet.vm.box = "ubuntu/bionic64"
+    fleet.vm.hostname = "fleet"
+    fleet.vm.provider "virtualbox" do |vb|
+      vb.memory = 12000
+      vb.cpus = 4
+    end
+    fleet.vm.network :private_network, ip: "10.16.2.25"
+    fleet.vm.network "forwarded_port", guest: 22, host: 522
+    # Forward range of ports for services
+    for i in 17001..17100
+      fleet.vm.network :forwarded_port, guest: i, host: i
+    end
+    
+    fleet.vm.provision "file", source: "fleet-osquery/.", destination: "~/"
+
+    fleet.vm.provision "file", source: "~/.ssh/lnx_rsa", destination: "~/.ssh/lnx_rsa"
+    
+    fleet.vm.provision "file", source: "~/.ssh/lnx_rsa.pub", destination: "~/.ssh/lnx_rsa.pub"
+
+    fleet.vm.provision "file", source: "~/update_fleet.sh", destination: "~/"
+
+    fleet.vm.provision "shell", path: "setup_fleet.sh"
+  end
+
+  config.vm.define "lnxserver" do |lnxserver|
+    lnxserver.vm.box = "ubuntu/bionic64"
+    lnxserver.vm.hostname = "lnx01"
+    lnxserver.vm.provider "virtualbox" do |vb|
+      vb.memory = 8000
+      vb.cpus = 2
+    end
+    lnxserver.vm.network :private_network, ip: "10.16.2.26"
+    lnxserver.vm.network "forwarded_port", guest: 22, host: 622
+    # Forward range of ports for services
+    for i in 17101..17200
+      lnxserver.vm.network :forwarded_port, guest: i, host: i
+    end
+    
+    lnxserver.vm.provision "file", source: "~/.ssh/lnx_rsa.pub", destination: "~/.ssh/lnx_rsa.pub"
+
+    lnxserver.vm.provision "shell", path: "setup_lnxserver.sh"
+
+  end
+
+end
