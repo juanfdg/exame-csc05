@@ -34,6 +34,9 @@ Vagrant.configure("2") do |config|
     end
     lnxserver.vm.network :private_network, ip: "10.16.2.26"
     lnxserver.vm.network "forwarded_port", guest: 22, host: 622
+    # Forward WebGoat and WebWolf ports
+    lnxserver.vm.network :forwarded_port, guest: 8080, host: 8080
+    lnxserver.vm.network :forwarded_port, guest: 9090, host: 9090 
     # Forward range of ports for services
     for i in 17101..17200
       lnxserver.vm.network :forwarded_port, guest: i, host: i
